@@ -1,0 +1,66 @@
+
+import java.util.Stack;
+import java.util.StringTokenizer;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ *
+ * @author USER
+ */
+public class PrefixEvaluator {
+
+    public static boolean isOperator(String s) {
+        return (s.equals("+") || s.equals("-")
+                || s.equals("*") || s.equals("/"));
+    }
+
+    public static double evaluate(String op, double n1, double n2) {
+        if (op.equals("+")) {
+            return n1 + n2;
+        }
+        if (op.equals("-")) {
+            return n1 - n2;
+        }
+        if (op.equals("*")) {
+            return n1 * n2;
+        }
+        if (op.equals("/")) {
+            if (n2 == 0) {
+                throw new RuntimeException("Divide by 0!");
+            }
+            return n1 / n2;
+        }
+        throw new RuntimeException("Operator is not supported!");
+    }
+
+    public static double evaluate(String exp) {
+        double result = 0;
+
+        String op[] = exp.split(" ");
+
+        Stack<Double> stack = new Stack();
+        double n1, n2;
+        for (int i = op.length - 1; i >= 0; i--) {
+            String part = op[i];
+
+            if (!isOperator(part)) {
+                stack.push(Double.parseDouble(part));
+            } else {
+                n1 = stack.pop();
+                n2 = stack.pop();
+                result = evaluate(part, n1, n2);
+                stack.push(result);
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        String exp = "* 3 + * 6 5 * 4 3";
+        System.out.println(evaluate(exp));
+    }
+}
